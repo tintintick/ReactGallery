@@ -23,7 +23,33 @@ html, body {
   position: relative;
   width: 100%;
   height: 100%;
+  overflow: hidden;
   background-color: #ddd;
+
+  @at-root {
+    .img-figure {
+      //position: absolute;
+      width: 320px;
+      height: 360px;
+      padding: 40px;
+      margin: 0;
+
+      background-color: #fff;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+
+    figcaption {
+      text-align: center;
+      .img-title {
+        margin: 20px 0 0 0;
+        color: #a7a0a2;
+        font-size: 16px;
+      }
+    }
+  }
+
 }
 /* img -- end */
 
@@ -38,3 +64,13 @@ html, body {
   text-align: center;
 }
 /* nav -- end */
+
+/* imgfigure -- start */
+
+/* imgfigure -- end */
+
+/* imgtitle -- start */
+.img-title {
+
+}
+/* imgtitle -- end */
