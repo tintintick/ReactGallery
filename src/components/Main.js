@@ -14,8 +14,13 @@ let images = require('../data/images');
 class ImageFigure extends React.Component {
 
   render () {
+    let styleObj = {};
+    if (this.props.styleData.pos){
+      styleObj = this.props.styleData.pos;
+    }
+
     return (
-        <figure className="img-figure">
+        <figure className="img-figure" style={styleObj}>
           <img src={this.props.image.path} alt={this.props.image.title} />
           <figcaption>
             <h2 className="img-title">{this.props.image.title}</h2>
@@ -61,11 +66,72 @@ class AppComponent extends React.Component {
   };
 
   /*
+   * 在取值范围内生成随机数
+   * @param low最小值，high最大值
+   */
+  getRandomRange(low, high) {
+    return Math.ceil(Math.random()*(high-low)+low);
+  }
+
+  /*
    * 重新排布图片
    * @param centerIndex 需要居中图片的ref值
    */
   rearrange(centerIndex) {
+    let imgsArrange = this.state.imgsArrangeArr,
+        Constent = this.Constent,
+        centerPartPos = Constent.centerPartPos,
+        leftPosRange = Constent.leftPosRange,
+        rightPosRange = Constent.rightPosRange,
+        topPosRange = Constent.topPosRange,
+        centerImgArr = [],
+        leftImgsArr = [],
+        rightImgsArr = [],
+        topImgsArr = [],
+        topImgsNum = this.getRandomRange(0, 1),
+        leftImgsNum = this.getRandomRange(3, 5),
+        rightImgsNum = imgsArrange.length-topImgsNum-leftImgsNum-1;
 
+        centerImgArr = imgsArrange.splice(centerIndex, 1);
+        // 设置中部图片位置信息
+        centerImgArr[0].pos = centerPartPos;
+        // 设置上部图片位置信息
+        let topImgIndex = Math.ceil(Math.random()*(imgsArrange.length-topImgsNum));
+        topImgsArr = imgsArrange.splice(topImgIndex, topImgsNum);
+        topImgsArr.forEach((item, index) => {
+          topImgsArr[index].pos = {
+            top: this.getRandomRange(topPosRange.yRange[0], topPosRange.yRange[1]),
+            left: this.getRandomRange(topPosRange.xRange[0], topPosRange.xRange[1])
+          }
+        });
+        // 设置左部图片位置信息
+        for(let i=0;i<leftImgsNum;i++){
+          let tempIndex = this.getRandomRange(0, imgsArrange.length);
+          imgsArrange[tempIndex].pos = {
+            top: this.getRandomRange(leftPosRange.yRange[0], leftPosRange.yRange[1]),
+            left: this.getRandomRange(leftPosRange.xRange[0], leftPosRange.xRange[1])
+          };
+          leftImgsArr.push(imgsArrange.splice(tempIndex, 1)[0]);
+        }
+        // 设置右部图片位置信息
+        for(let i=0;i<rightImgsNum;i++){
+          let tempIndex = this.getRandomRange(0, imgsArrange.length);
+          imgsArrange[tempIndex].pos = {
+            top: this.getRandomRange(rightPosRange.yRange[0], rightPosRange.yRange[1]),
+            left: this.getRandomRange(rightPosRange.xRange[0], rightPosRange.xRange[1])
+          };
+          rightImgsArr.push(imgsArrange.splice(tempIndex, 1)[0]);
+        }
+
+        // 重新组合图片信息数组
+        imgsArrange.push.apply(imgsArrange, centerImgArr);
+        imgsArrange.push.apply(imgsArrange, topImgsArr);
+        imgsArrange.push.apply(imgsArrange, leftImgsArr);
+        imgsArrange.push.apply(imgsArrange, rightImgsArr);
+
+        this.setState({
+          imgsArrangeArr: imgsArrange
+        });
   }
 
   componentDidMount() {
@@ -124,7 +190,7 @@ class AppComponent extends React.Component {
                   }
                 }
                 return (
-                    <ImageFigure image={item} ref={'imgFigure'+index} key={index} />
+                    <ImageFigure image={item} ref={'imgFigure'+index} key={index} styleData={this.state.imgsArrangeArr[index]} />
                 );
               })
             }
