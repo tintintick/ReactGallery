@@ -14,7 +14,7 @@ html, body {
 .img-stage {
   position: relative;
   width: 100%;
-  height: 680px;
+  height: 100%;
 }
 /* stage -- end */
 
@@ -26,6 +26,7 @@ html, body {
   overflow: hidden;
   background-color: #ddd;
 
+  perspective: 1800px;
   @at-root {
     .img-figure {
       position: absolute;
@@ -35,9 +36,13 @@ html, body {
       margin: 0;
 
       background-color: #fff;
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
       box-sizing: border-box;
+      cursor: pointer;
+
+      transform-style: preserve-3d;
+      &.is-inverse {
+        transform: rotateY(180deg); // 只有水平未左右旋转的图片才能沿Y轴旋转
+      }
     }
 
     figcaption {
@@ -46,6 +51,29 @@ html, body {
         margin: 20px 0 0 0;
         color: #a7a0a2;
         font-size: 16px;
+      }
+
+      .img-back {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        padding: 50px 40px;
+        overflow: auto;
+
+        color: #a7a0a2;
+        font-size: 22px;
+        line-height: 1.25;
+        text-align: left;
+        background-color: #fff;
+        box-sizing: border-box;
+        transform: rotateY(180deg) translateZ(1px);
+        backface-visibility: hidden;
+
+        p {
+          margin: 0;
+        }
       }
     }
   }
