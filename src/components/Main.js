@@ -57,6 +57,39 @@ class ImageFigure extends React.Component {
   }
 }
 
+// 导航条单个结点组件
+class ControllerUnit extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  handleClick(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    if (this.props.imgStyle.isCenter) {
+      // 翻转
+      this.props.inverse();
+    } else {
+      // 切换
+      this.props.center();
+    }
+  }
+
+  render() {
+    let unitStyle = 'controller-unit';
+    if (this.props.imgStyle.isCenter) {
+      unitStyle += ' is-center';
+    }
+    if (this.props.imgStyle.isInverse) {
+      unitStyle += ' is-inverse';
+    }
+    return (
+      <span className={unitStyle} onClick={this.handleClick.bind(this)}></span>
+    );
+  }
+}
+
 // 图片廊整体组件
 class AppComponent extends React.Component {
 
@@ -283,6 +316,7 @@ class AppComponent extends React.Component {
                     isCenter: false
                   }
                 }
+                controllerUnits.push(<ControllerUnit key={index} imgStyle={this.state.imgsArrangeArr[index]} inverse={this.imgInverse(index)} center={this.imgCenter(index)} />);
                 return (
                     <ImageFigure image={item} ref={'imgFigure'+index} key={index} styleData={this.state.imgsArrangeArr[index]} inverse={this.imgInverse(index)} center={this.imgCenter(index)} />
                 );
